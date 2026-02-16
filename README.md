@@ -51,9 +51,69 @@ executor = AgentExecutor(agent=agent, tools=[tool])
 
 # 4. Agent can now access any x402-enabled API
 result = executor.invoke({
-    "input": "Get premium data from https://api.example.com/paid-endpoint"
+    "input": "Get the premium analysis from https://sandbox.agentrails.io/api/x402/protected/analysis"
 })
 ```
+
+## Try It with the Sandbox
+
+The [AgentRails Sandbox](https://sandbox.agentrails.io) is a free test environment with x402-protected endpoints you can hit right away. No signup required to see the 402 flow in action.
+
+### 1. Check available endpoints and pricing
+
+```bash
+curl https://sandbox.agentrails.io/api/x402/pricing
+```
+
+```json
+{
+  "endpoints": [
+    { "resource": "/api/x402/protected/analysis", "amountUsdc": 0.01 },
+    { "resource": "/api/x402/protected/data", "amountUsdc": 0.001 }
+  ],
+  "supportedNetworks": [
+    "arc-testnet", "base-sepolia", "ethereum-sepolia",
+    "base-mainnet", "ethereum-mainnet"
+  ],
+  "payTo": "0x6255d8dd3f84ec460fc8b07db58ab06384a2f487"
+}
+```
+
+### 2. See a 402 response
+
+```bash
+curl -i https://sandbox.agentrails.io/api/x402/protected/analysis
+# → 402 Payment Required
+# → X-PAYMENT-REQUIRED: <base64-encoded payment requirements>
+```
+
+### 3. Point your agent at the sandbox
+
+```python
+wallet = X402Wallet(
+    private_key=os.environ["WALLET_PRIVATE_KEY"],
+    network="base-sepolia",  # Use testnet for sandbox
+    budget_usd=1.00
+)
+
+tool = X402PaymentTool(wallet=wallet)
+
+# The tool handles the 402 → sign → retry flow automatically
+result = tool.invoke({
+    "url": "https://sandbox.agentrails.io/api/x402/protected/analysis"
+})
+```
+
+### Sandbox Endpoints
+
+| Endpoint | Cost | Description |
+|----------|------|-------------|
+| `GET /api/x402/protected/analysis` | $0.01 USDC | AI analysis (premium) |
+| `GET /api/x402/protected/data` | $0.001 USDC | Data endpoint (micropayment) |
+| `GET /api/x402/pricing` | Free | Pricing for all protected endpoints |
+| `GET /api/x402/stats` | Free | Payment statistics |
+
+Full API reference: [sandbox.agentrails.io/swagger](https://sandbox.agentrails.io/swagger)
 
 ## Features
 
@@ -92,7 +152,7 @@ Limit how much an agent can pay for a single request:
 ```python
 # In the tool input
 result = tool.invoke({
-    "url": "https://api.example.com/expensive",
+    "url": "https://sandbox.agentrails.io/api/x402/protected/analysis",
     "max_price_usd": 0.05  # Won't pay more than $0.05 for this request
 })
 ```
@@ -203,10 +263,15 @@ See the [examples/](examples/) directory:
 | Credential rotation | No credentials to leak |
 | Service-level limits | Agent-level budgets |
 
+## Related Packages
+
+- [crewai-x402](https://pypi.org/project/crewai-x402/) - x402 integration for CrewAI
+
 ## Resources
 
 - [x402 Protocol Spec](https://x402.org)
 - [AgentRails Documentation](https://agentrails.io/docs)
+- [AgentRails Swagger (Sandbox)](https://sandbox.agentrails.io/swagger)
 - [EIP-3009 Specification](https://eips.ethereum.org/EIPS/eip-3009)
 - [LangChain Custom Tools](https://python.langchain.com/docs/modules/tools/custom_tools)
 
