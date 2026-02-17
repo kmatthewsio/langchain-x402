@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "langchain-x402"
-version = "0.1.0"
+version = "0.1.1"
 description = "x402 payment protocol integration for LangChain - enable AI agents to pay for APIs with USDC"
 readme = "README.md"
 license = "MIT"
