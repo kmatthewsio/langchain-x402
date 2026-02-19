@@ -37,7 +37,7 @@ from langchain.agents import AgentExecutor, create_react_agent
 # 1. Create a wallet with a USDC budget
 wallet = X402Wallet(
     private_key=os.environ["WALLET_PRIVATE_KEY"],
-    network="base-mainnet",
+    network="eip155:8453",  # Base mainnet (CAIP-2 format)
     budget_usd=10.00
 )
 
@@ -72,8 +72,8 @@ curl https://sandbox.agentrails.io/api/x402/pricing
     { "resource": "/api/x402/protected/data", "amountUsdc": 0.001 }
   ],
   "supportedNetworks": [
-    "arc-testnet", "base-sepolia", "ethereum-sepolia",
-    "base-mainnet", "ethereum-mainnet"
+    "eip155:5042002", "eip155:84532", "eip155:11155111",
+    "eip155:8453", "eip155:1"
   ],
   "payTo": "0x6255d8dd3f84ec460fc8b07db58ab06384a2f487"
 }
@@ -84,7 +84,7 @@ curl https://sandbox.agentrails.io/api/x402/pricing
 ```bash
 curl -i https://sandbox.agentrails.io/api/x402/protected/analysis
 # → 402 Payment Required
-# → X-PAYMENT-REQUIRED: <base64-encoded payment requirements>
+# → PAYMENT-REQUIRED: <base64-encoded payment requirements>
 ```
 
 ### 3. Point your agent at the sandbox
@@ -92,7 +92,7 @@ curl -i https://sandbox.agentrails.io/api/x402/protected/analysis
 ```python
 wallet = X402Wallet(
     private_key=os.environ["WALLET_PRIVATE_KEY"],
-    network="base-sepolia",  # Use testnet for sandbox
+    network="eip155:84532",  # Base Sepolia testnet (CAIP-2 format)
     budget_usd=1.00
 )
 
@@ -134,7 +134,7 @@ Set spending limits at the wallet level:
 ```python
 wallet = X402Wallet(
     private_key=key,
-    network="base-mainnet",
+    network="eip155:8453",
     budget_usd=5.00  # Agent can't spend more than $5
 )
 
@@ -171,19 +171,21 @@ print(f"Payments made: {summary['payment_count']}")
 ```
 
 ### Multi-Network Support
-Supports multiple EVM networks:
+Supports multiple EVM networks using [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md) identifiers:
 
 ```python
 # Base (recommended - low fees)
-wallet = X402Wallet(private_key=key, network="base-mainnet")
+wallet = X402Wallet(private_key=key, network="eip155:8453")
 
 # Ethereum
-wallet = X402Wallet(private_key=key, network="ethereum-mainnet")
+wallet = X402Wallet(private_key=key, network="eip155:1")
 
 # Testnets
-wallet = X402Wallet(private_key=key, network="base-sepolia")
-wallet = X402Wallet(private_key=key, network="arc-testnet")
+wallet = X402Wallet(private_key=key, network="eip155:84532")   # Base Sepolia
+wallet = X402Wallet(private_key=key, network="eip155:5042002") # Arc testnet
 ```
+
+> Legacy network names (`base-mainnet`, `base-sepolia`, etc.) are still accepted for backwards compatibility.
 
 ## API Reference
 
@@ -192,7 +194,7 @@ wallet = X402Wallet(private_key=key, network="arc-testnet")
 ```python
 X402Wallet(
     private_key: str,      # Hex-encoded private key
-    network: str,          # Network name (e.g., "base-mainnet")
+    network: str,          # CAIP-2 network ID (e.g., "eip155:8453")
     budget_usd: float,     # Maximum USD to spend
 )
 ```
@@ -232,19 +234,21 @@ X402PaymentTool(
 
 ## Networks
 
-| Network | Chain ID | Environment |
-|---------|----------|-------------|
-| `base-mainnet` | 8453 | Production |
-| `base-sepolia` | 84532 | Testnet |
-| `ethereum-mainnet` | 1 | Production |
-| `ethereum-sepolia` | 11155111 | Testnet |
-| `arc-testnet` | 5042002 | Testnet |
+V2 uses [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md) network identifiers:
+
+| Network ID (CAIP-2) | Chain ID | Environment | Legacy Alias |
+|---------------------|----------|-------------|-------------|
+| `eip155:8453` | 8453 | Production | `base-mainnet` |
+| `eip155:84532` | 84532 | Testnet | `base-sepolia` |
+| `eip155:1` | 1 | Production | `ethereum-mainnet` |
+| `eip155:11155111` | 11155111 | Testnet | `ethereum-sepolia` |
+| `eip155:5042002` | 5042002 | Testnet | `arc-testnet` |
 
 ## Security Considerations
 
 1. **Never commit private keys** - Use environment variables or secret managers
 2. **Set appropriate budgets** - Limit what agents can spend
-3. **Use testnets first** - Test with `base-sepolia` before mainnet
+3. **Use testnets first** - Test with `eip155:84532` (Base Sepolia) before mainnet
 4. **Monitor spending** - Check `wallet.get_payment_summary()` regularly
 
 ## Examples

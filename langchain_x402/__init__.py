@@ -8,7 +8,7 @@ Example:
 
     wallet = X402Wallet(
         private_key=os.environ["WALLET_PRIVATE_KEY"],
-        network="base-mainnet",
+        network="eip155:8453",
         budget_usd=10.00
     )
 

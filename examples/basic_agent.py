@@ -28,7 +28,7 @@ def main():
     # Initialize wallet with USDC budget
     wallet = X402Wallet(
         private_key=os.environ["WALLET_PRIVATE_KEY"],
-        network="base-mainnet",  # Use "base-sepolia" for testnet
+        network="eip155:8453",  # Use "eip155:84532" for Base Sepolia testnet
         budget_usd=5.00,  # Maximum $5 spend limit
     )
 
