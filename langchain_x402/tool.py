@@ -143,9 +143,12 @@ class X402PaymentTool(BaseTool):
                 return response.text
 
             # Handle 402 Payment Required
-            payment_header = response.headers.get("X-PAYMENT-REQUIRED")
+            payment_header = (
+                response.headers.get("PAYMENT-REQUIRED")
+                or response.headers.get("X-PAYMENT-REQUIRED")
+            )
             if not payment_header:
-                return "Error: Received 402 but no X-PAYMENT-REQUIRED header"
+                return "Error: Received 402 but no PAYMENT-REQUIRED header"
 
             try:
                 requirements = self._parse_payment_requirements(payment_header)
@@ -203,7 +206,7 @@ class X402PaymentTool(BaseTool):
             payment_value = self._build_payment_header(requirements, signature, nonce)
 
             # Retry with payment
-            request_headers["X-PAYMENT"] = payment_value
+            request_headers["PAYMENT-SIGNATURE"] = payment_value
             paid_response = client.request(
                 method=method,
                 url=url,
@@ -218,7 +221,10 @@ class X402PaymentTool(BaseTool):
                 )
 
             # Log payment response if present
-            payment_response = paid_response.headers.get("X-PAYMENT-RESPONSE")
+            payment_response = (
+                paid_response.headers.get("PAYMENT-RESPONSE")
+                or paid_response.headers.get("X-PAYMENT-RESPONSE")
+            )
             if payment_response and run_manager:
                 try:
                     pr_data = json.loads(base64.b64decode(payment_response))
@@ -258,9 +264,12 @@ class X402PaymentTool(BaseTool):
                 return response.text
 
             # Handle 402 Payment Required
-            payment_header = response.headers.get("X-PAYMENT-REQUIRED")
+            payment_header = (
+                response.headers.get("PAYMENT-REQUIRED")
+                or response.headers.get("X-PAYMENT-REQUIRED")
+            )
             if not payment_header:
-                return "Error: Received 402 but no X-PAYMENT-REQUIRED header"
+                return "Error: Received 402 but no PAYMENT-REQUIRED header"
 
             try:
                 requirements = self._parse_payment_requirements(payment_header)
@@ -318,7 +327,7 @@ class X402PaymentTool(BaseTool):
             payment_value = self._build_payment_header(requirements, signature, nonce)
 
             # Retry with payment
-            request_headers["X-PAYMENT"] = payment_value
+            request_headers["PAYMENT-SIGNATURE"] = payment_value
             paid_response = await client.request(
                 method=method,
                 url=url,

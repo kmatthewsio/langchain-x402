@@ -54,7 +54,7 @@ class X402Wallet:
     """
 
     private_key: str
-    network: str = "base-mainnet"
+    network: str = "eip155:8453"
     budget_usd: float = 10.0
     _spent_usd: float = field(default=0.0, init=False)
     _payments: list[PaymentRecord] = field(default_factory=list, init=False)

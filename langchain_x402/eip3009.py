@@ -15,8 +15,15 @@ from eth_account import Account
 from eth_account.messages import encode_typed_data
 
 
-# USDC contract addresses by network
+# USDC contract addresses by network (CAIP-2 keys, with legacy aliases)
 USDC_CONTRACTS: dict[str, str] = {
+    # CAIP-2 format (canonical)
+    "eip155:8453": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "eip155:84532": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+    "eip155:1": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "eip155:11155111": "0x1c7D4B196Cb0C7B01d064914d0da28F12c7d0b86",
+    "eip155:5042002": "0x3600000000000000000000000000000000000000",
+    # Legacy aliases (backwards compat)
     "base-mainnet": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     "base-sepolia": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
     "ethereum-mainnet": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -24,8 +31,15 @@ USDC_CONTRACTS: dict[str, str] = {
     "arc-testnet": "0x3600000000000000000000000000000000000000",
 }
 
-# Chain IDs by network
+# Chain IDs by network (CAIP-2 keys, with legacy aliases)
 CHAIN_IDS: dict[str, int] = {
+    # CAIP-2 format (canonical)
+    "eip155:8453": 8453,
+    "eip155:84532": 84532,
+    "eip155:1": 1,
+    "eip155:11155111": 11155111,
+    "eip155:5042002": 5042002,
+    # Legacy aliases (backwards compat)
     "base-mainnet": 8453,
     "base-sepolia": 84532,
     "ethereum-mainnet": 1,

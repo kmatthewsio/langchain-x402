@@ -27,7 +27,7 @@ from .eip3009 import (
 from .tool import X402PaymentTool, X402RequestInput
 from .wallet import PaymentRecord, X402Wallet
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     # Main classes
