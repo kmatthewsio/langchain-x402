@@ -5,6 +5,8 @@
 
 **Enable AI agents to pay for APIs with USDC using the x402 protocol.**
 
+Built by [AgentRails](https://www.agentrails.io) — AI agent payment infrastructure for the x402 protocol.
+
 langchain-x402 integrates the [x402 payment protocol](https://x402.org) with LangChain, allowing your AI agents to autonomously access paid APIs without managing API keys or subscriptions.
 
 ## What is x402?
@@ -270,11 +272,14 @@ See the [examples/](examples/) directory:
 ## Related Packages
 
 - [crewai-x402](https://pypi.org/project/crewai-x402/) - x402 integration for CrewAI
+- [AgentRails.SemanticKernel.X402](https://www.nuget.org/packages/AgentRails.SemanticKernel.X402) - x402 for Semantic Kernel (.NET)
+- [AgentRails.AgentFramework.X402](https://www.nuget.org/packages/AgentRails.AgentFramework.X402) - x402 for Microsoft Agent Framework (.NET)
 
 ## Resources
 
+- [AgentRails](https://www.agentrails.io) - AI agent payment infrastructure
+- [AgentRails Documentation](https://www.agentrails.io/docs)
 - [x402 Protocol Spec](https://x402.org)
-- [AgentRails Documentation](https://agentrails.io/docs)
 - [AgentRails Swagger (Sandbox)](https://sandbox.agentrails.io/swagger)
 - [EIP-3009 Specification](https://eips.ethereum.org/EIPS/eip-3009)
 - [LangChain Custom Tools](https://python.langchain.com/docs/modules/tools/custom_tools)
